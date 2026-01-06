@@ -22,9 +22,10 @@ module.exports = (schema) => {
 
     if (error) {
       return res.status(400).json({
-        error: 'Validation failed',
+        status: 'error',
         code: 'VALIDATION_ERROR',
-        details: error.details.reduce((acc, curr) => {
+        message: 'Validation failed',
+        errors: error.details.reduce((acc, curr) => {
           acc[curr.path.join('.')] = curr.message
           return acc
         }, {})

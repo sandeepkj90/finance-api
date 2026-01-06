@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true
     },
+    phone: { type: String, trim: true, default: null },
+    address: { type: String, trim: true, default: null },
     passwordHash: { type: String, required: true },
     refreshToken: { type: String, default: null }
   },

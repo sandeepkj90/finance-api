@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 
-const INVESTMENT_TYPES = ['Stocks', 'Mutual Fund', 'Bonds', 'ETFs', 'Cryptocurrency', 'Fixed Deposit']
-
-const INVESTMENT_CATEGORIES = [
+const BUDGET_CATEGORIES = [
   'Housing & Fixed Commitments',
   'Utilities & Communication',
   'Groceries & Daily Essentials',
@@ -13,48 +11,43 @@ const INVESTMENT_CATEGORIES = [
   'Miscellaneous'
 ]
 
-const schema = new mongoose.Schema(
+const budgetSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
     },
-    name: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    type: {
-      type: String,
-      enum: INVESTMENT_TYPES,
-      required: true
-    },
     category: {
       type: String,
-      enum: INVESTMENT_CATEGORIES,
+      enum: BUDGET_CATEGORIES,
       required: true
     },
-    amount: {
+    limit: {
       type: Number,
       required: true,
       min: 1
     },
-    currentValue: {
+    spent: {
       type: Number,
-      required: true,
+      default: 0,
       min: 0
     },
-    returns: {
+    month: {
       type: Number,
-      default: 0
+      required: true,
+      min: 0,
+      max: 11
     },
-    date: {
-      type: Date,
+    year: {
+      type: Number,
       required: true
     }
   },
   { timestamps: true }
 )
 
-module.exports = mongoose.model('Investment', schema)
+// Compound index to ensure unique budget per user/category/month/year
+budgetSchema.index({ userId: 1, category: 1, month: 1, year: 1 }, { unique: true })
+
+module.exports = mongoose.model('Budget', budgetSchema)

@@ -24,6 +24,20 @@ exports.getProfile = async (userId) => {
 }
 
 exports.updateProfile = async (userId, data) => {
+  // Check if email is being updated and if it already exists
+  if (data.email) {
+    const existingUser = await User.findOne({
+      email: data.email,
+      _id: { $ne: userId }
+    })
+    if (existingUser) {
+      const err = new Error('Email already in use by another user')
+      err.status = 409
+      err.code = 'EMAIL_EXISTS'
+      throw err
+    }
+  }
+
   return User.findByIdAndUpdate(userId, data, {
     new: true,
     runValidators: true,

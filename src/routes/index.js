@@ -1,6 +1,7 @@
 const router = require('express').Router()
 
 router.use('/auth', require('./auth.routes'))
+router.use('/budgets', require('./budget.routes'))
 router.use('/expenses', require('./expense.routes'))
 router.use('/incomes', require('./income.routes'))
 router.use('/investments', require('./investment.routes'))
